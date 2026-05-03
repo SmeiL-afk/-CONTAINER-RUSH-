@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang=«ru»>
+<head>
+    <meta charset=«UTF-8»>
+    <meta name=«viewport» content=«width=device-width, initial-scale=1.0, viewport-fit=cover»>
+    <title>Контейнеры Тачки</title>
+    <script src=«https://telegram.org/js/telegram-web-app.js»></script>
+    <style>
+        body {
+            background: #0a0f1e;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: system-ui;
+            color: white;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            text-align: center;
+            background: #1f2a3e;
+            padding: 30px;
+            border-radius: 36px;
+            width: 100%;
+            max-width: 320px;
+        }
+        button {
+            background: #ff9800;
+            border: none;
+            padding: 15px;
+            width: 100%;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 60px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+        .car {
+            font-size: 70px;
+            margin: 20px 0;
+        }
+        .result {
+            margin-top: 20px;
+            background: #00000066;
+            padding: 12px;
+            border-radius: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class=«container»>
+    <h3>🚛 КОНТЕЙНЕР 🚛</h3>
+    <div class=«car» id=«carBox»>📦</div>
+    <button id=«openBtn»>🔓 ОТКРЫТЬ ЗА 1⭐</button>
+    <div class=«result» id=«resultMessage»>Нажни на контейнер, чтобы выпала тачка</div>
+</div>
+<script>
+    const cars = [
+        { name: «LADA Priora», rarity: «common», emoji: «🚗», chance: 70 },
+        { name: «BMW M3», rarity: «rare», emoji: «🏎️», chance: 20 },
+        { name: «Ferrari F40», rarity: «epic», emoji: «🔥», chance: 7 },
+        { name: «Lamborghini Veneno», rarity: «legendary», emoji: «👑», chance: 3 }
+    ];
+
+    function getRandomCar() {
+        const rand = Math.random() * 100;
+        let sum = 0;
+        for (let car of cars) {
+            sum += car.chance;
+            if (rand <= sum) return car;
+        }
+        return cars[0];
+    }
+
+    const btn = document.getElementById('openBtn');
+    const carBox = document.getElementById('carBox');
+    const resultDiv = document.getElementById('resultMessage');
+
+    btn.addEventListener('click', () => {
+        const car = getRandomCar();
+        carBox.innerHTML = car.emoji;
+        resultDiv.innerHTML = `🚘 Выпало: ${car.name} [${car.rarity}]`;
+
+        const tg = window.Telegram.WebApp;
+        if (tg && tg.MainButton) {
+            tg.MainButton.setText(`💰 Купить ещё ключ (1⭐)`);
+            tg.MainButton.show();
+        }
+    });
+
+    const tg = window.Telegram.WebApp;
+    tg.ready();
+    tg.expand();
+</script>
+</body>
+</html>
